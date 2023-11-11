@@ -32,16 +32,21 @@ header {
 button {
   border: none;
   cursor: pointer;
+  font-size: 12px;
   font-family: var(--fontFamily);
   border-radius: var(--borderRadius);
 }
 
+form {
+  font-family: var(--fontFamily);
+}
 form input {
   margin: 0;
   padding: 0;
   border: none;
   outline: none;
   max-width: 100%;
+  font-family: var(--fontFamily);
   border-radius: var(--borderRadius);
 }
 
@@ -100,6 +105,10 @@ footer {
 
 .p5b {
   padding: 0 0 5px;
+}
+
+.p5t {
+  padding: 5px 0 0;
 }
 
 .m0auto {

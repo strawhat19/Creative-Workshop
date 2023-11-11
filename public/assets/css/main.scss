@@ -31,17 +31,20 @@ header { padding-top: 35px; }
 button {
     border: none;
     cursor: pointer;
+    font-size: 12px;
     font-family: var(--fontFamily);
     border-radius: var(--borderRadius);
 }
 
 form {
+    font-family: var(--fontFamily);
     input {
         margin: 0;
         padding: 0;
         border: none;
         outline: none;
         max-width: 100%;
+        font-family: var(--fontFamily);
         border-radius: var(--borderRadius);
     }
 }
@@ -64,6 +67,7 @@ footer {
 .p10y { padding: 10px 0; }
 .p15y { padding: 15px 0; }
 .p5b { padding: 0 0 5px; }
+.p5t { padding: 5px 0 0; }
 .m0auto { margin: 0 auto; }
 .p10b { padding: 0 0 10px; }
 .p15b { padding: 0 0 15px; }
