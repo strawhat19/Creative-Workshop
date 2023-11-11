@@ -6,6 +6,14 @@
 }
 
 :root {
+  --backLogBG: #e2e2f8;
+  --backLogSolid: #6e6edb;
+  --toDoBG: #f6d9ed;
+  --toDoSolid: #d341a5;
+  --inProgressBG: #d2e6ff;
+  --inProgressSolid: #2080ff;
+  --doneBG: #bde4b5;
+  --doneSolid: #00a64c;
   --borderRadius: 8px;
   --fontColor: white;
   --containerWidth: 90%;
@@ -99,6 +107,10 @@ footer {
   padding: 10px 0;
 }
 
+.p15x {
+  padding: 0 15px;
+}
+
 .p15y {
   padding: 15px 0;
 }
@@ -180,12 +192,32 @@ footer {
   text-align: right;
 }
 
+.ttu {
+  text-transform: uppercase;
+}
+
+.ttl {
+  text-transform: lowercase;
+}
+
+.ttc {
+  text-transform: capitalize;
+}
+
 .text-center {
   text-align: center;
 }
 
+.p15nb {
+  padding: 15px 15px 0 15px;
+}
+
 .accent {
   color: var(--accentColor);
+}
+
+.borderRadius {
+  border-radius: var(--borderRadius);
 }
 
 .container {
@@ -203,6 +235,9 @@ footer {
 }
 .flex.gap5 {
   grid-gap: 5px;
+}
+.flex.wrap {
+  flex-wrap: wrap;
 }
 .flex.gap10 {
   grid-gap: 10px;
@@ -222,6 +257,9 @@ footer {
 .flex.gap35 {
   grid-gap: 35px;
 }
+.flex.columns {
+  flex-direction: column;
+}
 .flex.alignCenter {
   align-items: center;
 }
@@ -231,9 +269,29 @@ footer {
 .flex.justifyCenter {
   justify-content: center;
 }
-.flex.directionColumn {
-  flex-direction: column;
-}
 .flex.spaceBetween {
   justify-content: space-between;
+}
+
+.card {
+  padding: 15px;
+  min-width: 49%;
+  border: solid 1px white;
+  border-radius: var(--borderRadius);
+}
+.card .cardContent {
+  font-size: 12px;
+}
+
+.status.todo {
+  color: var(--toDoSolid);
+  background: var(--toDoBG);
+}
+.status.inProgress {
+  color: var(--inProgressSolid);
+  background: var(--inProgressBG);
+}
+.status.done {
+  color: var(--doneSolid);
+  background: var(--doneBG);
 }/*# sourceMappingURL=main.css.map */

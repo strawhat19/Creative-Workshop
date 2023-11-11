@@ -7,6 +7,19 @@
 }
 
 :root {
+
+    --backLogBG: #e2e2f8;
+    --backLogSolid: #6e6edb;
+
+    --toDoBG: #f6d9ed;
+    --toDoSolid: #d341a5;
+ 
+    --inProgressBG: #d2e6ff;
+    --inProgressSolid: #2080ff;
+
+    --doneBG: #bde4b5;
+    --doneSolid: #00a64c;
+
     --borderRadius: 8px;
     --fontColor: white;
     --containerWidth: 90%;
@@ -65,6 +78,7 @@ footer {
 .p5x { padding: 0 5px; }
 .p5y { padding: 5px 0; }
 .p10y { padding: 10px 0; }
+.p15x { padding: 0 15px; }
 .p15y { padding: 15px 0; }
 .p5b { padding: 0 0 5px; }
 .p5t { padding: 5px 0 0; }
@@ -85,23 +99,54 @@ footer {
 .p5nt { padding: 0 5px 5px 5px; }
 .p5nb { padding: 5px 5px 0 5px; }
 .text-right { text-align: right; }
+.ttu { text-transform: uppercase; }
+.ttl { text-transform: lowercase; }
+.ttc { text-transform: capitalize; }
 .text-center { text-align: center; }
+.p15nb { padding: 15px 15px 0 15px; }
 .accent { color: var(--accentColor); }
+.borderRadius { border-radius: var(--borderRadius); }
 .container { width: var(--containerWidth); margin: 0 auto; }
 .cardBorder { border: 5px solid var(--accentColor); border-radius: var(--borderRadius); }
 
 .flex {
     display: flex;
     &.gap5 { grid-gap: 5px; }
+    &.wrap { flex-wrap: wrap; }
     &.gap10 { grid-gap: 10px; }
     &.gap15 { grid-gap: 15px; }
     &.gap20 { grid-gap: 20px; }
     &.gap25 { grid-gap: 25px; }
     &.gap30 { grid-gap: 30px; }
     &.gap35 { grid-gap: 35px; }
+    &.columns { flex-direction: column; }
     &.alignCenter { align-items: center; }
     &.alignCenter { align-items: center; }
     &.justifyCenter { justify-content: center; }
-    &.directionColumn { flex-direction: column; }
     &.spaceBetween { justify-content: space-between; }
+}
+
+.card {
+    padding: 15px;
+    min-width: 49%;
+    border: solid 1px white;
+    border-radius: var(--borderRadius);
+    .cardContent {
+        font-size: 12px;
+    }
+}
+
+.status {
+    &.todo {
+        color: var(--toDoSolid);
+        background: var(--toDoBG);
+    }
+    &.inProgress {
+        color: var(--inProgressSolid);
+        background: var(--inProgressBG);
+    }
+    &.done {
+        color: var(--doneSolid);
+        background: var(--doneBG);
+    }
 }
