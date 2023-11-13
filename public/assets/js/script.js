@@ -1,3 +1,4 @@
+let board;
 dayjs.extend(window.dayjs_plugin_utc);
 dayjs.extend(window.dayjs_plugin_timezone);
 
@@ -14,6 +15,8 @@ let dayFormat = `dddd`;
 let timeFormat = `h:mm:ss A`;
 let dateFormat = `MM/DD/YYYY`;
 let fullDateTimeFormat = `${timeFormat}, ${dayFormat}, ${dateFormat}`;
+
+let deleteCardButtons = document.querySelectorAll(`.cardDeleteButton`);
 
 const testBoardID = `CoKhGhy5`;
 const cardsNum = document.querySelector(`.cardsNum`);
@@ -37,6 +40,40 @@ const getTrelloBatchAPI = async (boardID) => {
     }
 }
 
+const deleteTrelloCard = async (cardID) => {
+    try {
+        const deleteTrelloCardResponse = await fetch(`https://api.trello.com/1/cards/${cardID}?key=${trelloAPIKey}&token=${trelloAPIToken}`, {
+            method: `DELETE`
+        });
+        if (!deleteTrelloCardResponse.ok) console.log(`HTTP error! status: ${deleteTrelloCardResponse.status}`);
+        const deletedTrelloCardData = await deleteTrelloCardResponse.json();
+        getBoard(testBoardID);
+        return deletedTrelloCardData;
+    } catch (error) {
+        console.log(`Error getting batch trello data`, error);
+    }
+}
+
+const createTrelloCard = async (name, listID) => {
+    try {
+        const createTrelloCardResponse = await fetch(`https://api.trello.com/1/cards?name=${encodeURIComponent(name)}&idList=${listID}&key=${trelloAPIKey}&token=${trelloAPIToken}`, {
+            method: `POST`,
+            headers: {
+                Accept: `application/json`
+            },
+            body: JSON.stringify({
+                name
+            })
+        });
+        if (!createTrelloCardResponse.ok) console.log(`HTTP error! status: ${createTrelloCardResponse.status}`);
+        const createdTrelloCard = await createTrelloCardResponse.json();
+        getBoard(testBoardID);
+        return createdTrelloCard;
+    } catch (error) {
+        console.log(`Error getting batch trello data`, error);
+    }
+}
+
 const setCardsData = (cards) => {
     if (cards.length > 0) {
         cardsContainer.innerHTML = ``;
@@ -53,6 +90,7 @@ const setCardsData = (cards) => {
             let cardElement = document.createElement(`div`);
             let cardLeft = document.createElement(`div`);
             let cardRight = document.createElement(`div`);
+            let cardDeleteButton = document.createElement(`button`);
 
             if (statusLevel <= 1) {
                 status = `todo`;
@@ -67,16 +105,25 @@ const setCardsData = (cards) => {
 
             cardTitle.classList.add(`cardTitle`, `flex`, `spaceBetween`);
             cardLeft.classList.add(`cardLeft`);
-            cardRight.classList.add(`cardRight`);
+            cardRight.classList.add(`cardRight`, `flex`, `gap10`, `alignCenter`);
 
             cardLeft.innerHTML = `${cardsIndex}) ${card?.name}`;
-            cardStatus.classList.add(`status`, status, `ttc`, `p15x`, `borderRadius`);
+            cardStatus.classList.add(`status`, status, `ttc`, `p15x`, `h100`, `flex`, `alignCenter`, `borderRadius`);
             cardStatus.innerHTML = card?.status;
 
             cardContent.classList.add(`cardContent`, `p15nb`);
             cardContent.append(card?.description);
+            
+            cardDeleteButton.id = `delete-card-${cardsIndex}-${card?.id}`;
+            cardDeleteButton.classList.add(`cardDeleteButton`, `invertOnHover`, `p5`);
+            cardDeleteButton.innerHTML = `<i class="fas fa-trash-alt"></i>`;
+            cardDeleteButton.addEventListener(`click`, deleteButtonClickEvent => {
+                let cardToDeleteID = cardDeleteButton?.id?.split(`-`).pop();
+                deleteTrelloCard(cardToDeleteID);
+            })
 
             cardRight.append(cardStatus);
+            cardRight.append(cardDeleteButton);
             cardTitle.append(cardLeft);
             cardTitle.append(cardRight);
 
@@ -96,6 +143,12 @@ const setCardsData = (cards) => {
             cardsContainer.append(cardElement);
         })
     }
+
+    // if (deleteCardButtons && deleteCardButtons.length > 0) {
+    //     deleteCardButtons.forEach((deleteButton, deleteButtonIndex) => {
+    //         deleteButton
+    //     })
+    // }
 }
 
 const getBoard = async (boardID) => {
@@ -104,7 +157,7 @@ const getBoard = async (boardID) => {
     let trelloLists = batchBoardData[1][200];
     let trelloCards = batchBoardData[2][200];
 
-    let board = {
+    board = {
         id: trelloBoard?.id,
         name: trelloBoard?.name,
         url: trelloBoard?.shortUrl,
@@ -145,8 +198,9 @@ const getBoard = async (boardID) => {
         cards,
     }
 
+    nextUpdateIn.innerHTML = 25;
     lastUpdated.innerHTML = dayjs().tz(defaultTimezone).format(timeFormat);
-    console.log(`Board`, board);
+    console.log(`Updated Board`, board);
 
     if (cards.length > 0) setCardsData(cards);
 }
@@ -154,7 +208,6 @@ const getBoard = async (boardID) => {
 getBoard(testBoardID);
 setInterval(() => {
     if (parseInt(nextUpdateIn.innerHTML) <= 0) {
-        nextUpdateIn.innerHTML = 25;
         getBoard(testBoardID);
     } else {
         nextUpdateIn.innerHTML = parseInt(nextUpdateIn.innerHTML) - 1;
@@ -163,10 +216,9 @@ setInterval(() => {
 
 trelloForm.addEventListener(`submit`, (trelloFormSubmitEvent) => {
     trelloFormSubmitEvent.preventDefault();
-
     let ticketTitle = trelloTicketTitleField?.value;
-    console.log(`Trello API Testing`);
-    console.log(`Ticket Title`, ticketTitle);
+    createTrelloCard(ticketTitle, board?.lists[0]?.id);
+    trelloForm.reset();
 });
 
 const copyrightYear = document.querySelector(`.year`);

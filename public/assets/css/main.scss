@@ -45,8 +45,14 @@ button {
     border: none;
     cursor: pointer;
     font-size: 12px;
+    transition: var(--transition);
     font-family: var(--fontFamily);
     border-radius: var(--borderRadius);
+    &.invertOnHover {
+        &:hover {
+            filter: invert(1);
+        }
+    }
 }
 
 form {
@@ -72,6 +78,7 @@ footer {
 .w90 { width: 90%; }
 .p5 { padding: 5px; }
 .w100 { width: 100%; }
+.h100 { height: 100%; }
 .p35 { padding: 35px; }
 .p10 { padding: 10px; }
 .p15 { padding: 15px; }

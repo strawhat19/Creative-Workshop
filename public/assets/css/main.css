@@ -41,8 +41,12 @@ button {
   border: none;
   cursor: pointer;
   font-size: 12px;
+  transition: var(--transition);
   font-family: var(--fontFamily);
   border-radius: var(--borderRadius);
+}
+button.invertOnHover:hover {
+  filter: invert(1);
 }
 
 form {
@@ -81,6 +85,10 @@ footer {
 
 .w100 {
   width: 100%;
+}
+
+.h100 {
+  height: 100%;
 }
 
 .p35 {
