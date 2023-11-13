@@ -7,19 +7,14 @@
 }
 
 :root {
-
     --backLogBG: #e2e2f8;
     --backLogSolid: #6e6edb;
-
     --toDoBG: #f6d9ed;
     --toDoSolid: #d341a5;
- 
     --inProgressBG: #d2e6ff;
     --inProgressSolid: #2080ff;
-
     --doneBG: #bde4b5;
     --doneSolid: #00a64c;
-
     --borderRadius: 8px;
     --fontColor: white;
     --containerWidth: 90%;
@@ -40,6 +35,8 @@ body {
 }
 
 header { padding-top: 35px; }
+
+img { max-width: 100%; }
 
 button {
     border: none;
@@ -90,6 +87,7 @@ footer {
 .p5b { padding: 0 0 5px; }
 .p5t { padding: 5px 0 0; }
 .m0auto { margin: 0 auto; }
+.mw225 { min-width: 225px; }
 .p10b { padding: 0 0 10px; }
 .p15b { padding: 0 0 15px; }
 .p20b { padding: 0 0 20px; }
@@ -101,6 +99,8 @@ footer {
 .p25t { padding: 25px 0 0; }
 .p30t { padding: 30px 0 0; }
 .p35t { padding: 35px 0 0; }
+.p5y15x { padding: 5px 15px; }
+.p5y20x { padding: 5px 20px; }
 .fit { min-width: fit-content; }
 .text-left { text-align: left; }
 .p5nt { padding: 0 5px 5px 5px; }
@@ -136,6 +136,7 @@ footer {
 .card {
     padding: 15px;
     min-width: 49%;
+    max-width: 49%;
     border: solid 1px white;
     border-radius: var(--borderRadius);
     .cardContent {

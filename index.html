@@ -21,10 +21,11 @@
     </header>
     <main class="container p15t">
         <section>
-            <form id="trelloTicketForm" class="trelloTicketForm">
-                <label for="trelloTicketTitleField">Ticket Title:</label>
-                <input type="text" class="trelloTicketTitleField p5" id="trelloTicketTitleField" name="trelloTicketTitleField" placeholder="Enter Ticket Title..." required>
-                <button class="p5" type="submit">Create Ticket</button>
+            <form id="trelloTicketForm" class="alignCenter flex gap15 trelloTicketForm">
+                <input type="text" class="trelloTicketTitleField p5y20x" id="trelloTicketTitleField" name="trelloTicketTitleField" placeholder="Enter Ticket Title..." required>
+                <input type="text" class="trelloTicketDescriptionField p5y20x mw225" id="trelloTicketDescriptionField" name="trelloTicketDescriptionField" placeholder="Enter Ticket Description...">
+                <input type="text" title="If you enter a valid public image url, it will be set as the card cover" class="trelloTicketAttachmentField p5y20x mw225" id="trelloTicketAttachmentField" name="trelloTicketAttachmentField" placeholder="Enter Ticket Attachment...">
+                <button class="p5y20x" type="submit">Create Ticket</button>
             </form>
         </section>
         <section class="cardsSection p15t">

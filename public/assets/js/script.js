@@ -26,7 +26,9 @@ const nextUpdateIn = document.querySelector(`.nextUpdateIn`);
 const trelloForm = document.querySelector(`.trelloTicketForm`);
 const cardsContainer = document.querySelector(`.cardsContainer`);
 const trelloTicketTitleField = document.querySelector(`.trelloTicketTitleField`);
+const trelloTicketAttachmentField = document.querySelector(`.trelloTicketAttachmentField`);
 const trelloAPISecret = `ab406d5ee169689f283c6c45594de45a4d3091f6f13e2d6f6098adf325c1a9e9`;
+const trelloTicketDescriptionField = document.querySelector(`.trelloTicketDescriptionField`);
 const trelloAPIToken = `ATTA66b1ce6ba14d4eceb263827501181da8062d575eafa5510d055c2c246f56eede75D5CE72`;
 
 const getTrelloBatchAPI = async (boardID) => {
@@ -54,20 +56,62 @@ const deleteTrelloCard = async (cardID) => {
     }
 }
 
-const createTrelloCard = async (name, listID) => {
+const addAttachmentToCard = async (cardID, attachmentURL) => {
     try {
-        const createTrelloCardResponse = await fetch(`https://api.trello.com/1/cards?name=${encodeURIComponent(name)}&idList=${listID}&key=${trelloAPIKey}&token=${trelloAPIToken}`, {
+        const attachURL = `https://api.trello.com/1/cards/${cardID}/attachments?key=${trelloAPIKey}&token=${trelloAPIToken}&url=${encodeURIComponent(attachmentURL)}`;
+        const response = await fetch(attachURL, {
             method: `POST`,
             headers: {
                 Accept: `application/json`
             },
-            body: JSON.stringify({
-                name
-            })
+        });
+        if (!response.ok) {
+            console.log(`HTTP error! status: ${response.status}`);
+            return;
+        }
+        const attachmentData = await response.json();
+        return attachmentData?.id;
+    } catch (error) {
+        console.log(`Error adding attachment to Trello card`, error);
+    }
+}
+
+const setCardCover = async (cardID, attachmentID) => {
+    try {
+        const coverUrl = `https://api.trello.com/1/cards/${cardID}?key=${trelloAPIKey}&token=${trelloAPIToken}&idAttachmentCover=${attachmentID}`;
+        const response = await fetch(coverUrl, {
+            method: `PUT`,
+            headers: {
+                Accept: `application/json`
+            },
+        });
+        if (!response.ok) {
+            console.log(`HTTP error! status: ${response.status}`);
+        } else {
+            getBoard(testBoardID);
+        }
+    } catch (error) {
+        console.log(`Error setting card cover`, error);
+    }
+}
+
+const createTrelloCard = async (name, description, attachmentURL, listID) => {
+    try {
+        let noURLSource = `https://api.trello.com/1/cards?name=${encodeURIComponent(name)}&desc=${encodeURIComponent(description)}&idList=${listID}&key=${trelloAPIKey}&token=${trelloAPIToken}`;
+        const createTrelloCardResponse = await fetch(noURLSource, {
+            method: `POST`,
+            headers: {
+                Accept: `application/json`
+            },
         });
         if (!createTrelloCardResponse.ok) console.log(`HTTP error! status: ${createTrelloCardResponse.status}`);
         const createdTrelloCard = await createTrelloCardResponse.json();
-        getBoard(testBoardID);
+        if (attachmentURL) {
+            const attachmentID = await addAttachmentToCard(createdTrelloCard.id, attachmentURL);
+            if (attachmentID) await setCardCover(createdTrelloCard.id, attachmentID);
+        } else {
+            getBoard(testBoardID);
+        };
         return createdTrelloCard;
     } catch (error) {
         console.log(`Error getting batch trello data`, error);
@@ -143,12 +187,6 @@ const setCardsData = (cards) => {
             cardsContainer.append(cardElement);
         })
     }
-
-    // if (deleteCardButtons && deleteCardButtons.length > 0) {
-    //     deleteCardButtons.forEach((deleteButton, deleteButtonIndex) => {
-    //         deleteButton
-    //     })
-    // }
 }
 
 const getBoard = async (boardID) => {
@@ -217,7 +255,9 @@ setInterval(() => {
 trelloForm.addEventListener(`submit`, (trelloFormSubmitEvent) => {
     trelloFormSubmitEvent.preventDefault();
     let ticketTitle = trelloTicketTitleField?.value;
-    createTrelloCard(ticketTitle, board?.lists[0]?.id);
+    let ticketDescription = trelloTicketDescriptionField?.value;
+    let ticketAttachment = trelloTicketAttachmentField?.value;
+    createTrelloCard(ticketTitle, ticketDescription, ticketAttachment, board?.lists[0]?.id);
     trelloForm.reset();
 });
 
