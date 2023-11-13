@@ -158,6 +158,36 @@ const getBoard = async (boardID) => {
 
 getBoard(testBoardID);
 
+const createWebhook = async () => {
+    try {
+        const response = await fetch(`https://api.trello.com/1/webhooks/`, {
+            method: `POST`,
+            headers: {
+                'Content-Type': `application/json`
+            },
+            body: JSON.stringify({
+                key: trelloAPIKey,
+                idModel: testBoardID,
+                token: trelloAPIToken,
+                callbackURL: `https://smasherscape.vercel.app/api/webhook/`,
+                description: `My Trello Webhook For Test Board`
+            })
+        });
+    
+        const latestBoardData = await response.json();
+        console.log(`Latest Board Data`, latestBoardData);
+        return latestBoardData;
+    } catch (error) {
+        if (error.response) {
+            console.log(`Response data`, await error.response.text());
+        } else {
+            console.log(`Error fetching Board Cards data: `, error);
+        }
+    }
+};
+
+// createWebhook();
+
 trelloForm.addEventListener(`submit`, (trelloFormSubmitEvent) => {
     trelloFormSubmitEvent.preventDefault();
 
