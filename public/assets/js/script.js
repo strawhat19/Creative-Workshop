@@ -1,6 +1,25 @@
+dayjs.extend(window.dayjs_plugin_utc);
+dayjs.extend(window.dayjs_plugin_timezone);
+
+let timezones = {
+    america_US_NewYork: `America/New_York`,
+    asia_Taiwan_Taipei: `Asia/Taipei`,
+    asia_Japan_Tokyo: `Asia/Tokyo`,
+}
+
+let browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+let defaultTimezone = browserTimezone || timezones.america_US_NewYork;
+
+let dayFormat = `dddd`;
+let timeFormat = `h:mm:ss A`;
+let dateFormat = `MM/DD/YYYY`;
+let fullDateTimeFormat = `${timeFormat}, ${dayFormat}, ${dateFormat}`;
+
 const testBoardID = `CoKhGhy5`;
 const cardsNum = document.querySelector(`.cardsNum`);
 const trelloAPIKey = `9c38cf9f33ed47f5b4023cf0abaa7bb0`;
+const lastUpdated = document.querySelector(`.lastUpdated`);
+const nextUpdateIn = document.querySelector(`.nextUpdateIn`);
 const trelloForm = document.querySelector(`.trelloTicketForm`);
 const cardsContainer = document.querySelector(`.cardsContainer`);
 const trelloTicketTitleField = document.querySelector(`.trelloTicketTitleField`);
@@ -126,13 +145,21 @@ const getBoard = async (boardID) => {
         cards,
     }
 
+    lastUpdated.innerHTML = dayjs().tz(defaultTimezone).format(timeFormat);
+    console.log(`Board`, board);
+
     if (cards.length > 0) setCardsData(cards);
 }
 
 getBoard(testBoardID);
 setInterval(() => {
-    getBoard(testBoardID);
-}, 25 * 1000);
+    if (parseInt(nextUpdateIn.innerHTML) <= 0) {
+        nextUpdateIn.innerHTML = 25;
+        getBoard(testBoardID);
+    } else {
+        nextUpdateIn.innerHTML = parseInt(nextUpdateIn.innerHTML) - 1;
+    }
+}, 1000);
 
 trelloForm.addEventListener(`submit`, (trelloFormSubmitEvent) => {
     trelloFormSubmitEvent.preventDefault();

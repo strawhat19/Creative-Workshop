@@ -294,4 +294,11 @@ footer {
 .status.done {
   color: var(--doneSolid);
   background: var(--doneBG);
+}
+
+.timeUpdates {
+  max-width: -moz-fit-content;
+  max-width: fit-content;
+  font-weight: 300;
+  font-size: 14px;
 }/*# sourceMappingURL=main.css.map */
