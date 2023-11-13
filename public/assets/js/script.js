@@ -1,4 +1,5 @@
 const testBoardID = `CoKhGhy5`;
+const cardsNum = document.querySelector(`.cardsNum`);
 const trelloAPIKey = `9c38cf9f33ed47f5b4023cf0abaa7bb0`;
 const trelloForm = document.querySelector(`.trelloTicketForm`);
 const cardsContainer = document.querySelector(`.cardsContainer`);
@@ -6,42 +7,21 @@ const trelloTicketTitleField = document.querySelector(`.trelloTicketTitleField`)
 const trelloAPISecret = `ab406d5ee169689f283c6c45594de45a4d3091f6f13e2d6f6098adf325c1a9e9`;
 const trelloAPIToken = `ATTA66b1ce6ba14d4eceb263827501181da8062d575eafa5510d055c2c246f56eede75D5CE72`;
 
-const getTrelloBoard = async (boardID) => {
+const getTrelloBatchAPI = async (boardID) => {
     try {
-        const trelloBoardResponse = await fetch(`https://api.trello.com/1/boards/${boardID}?key=${trelloAPIKey}&token=${trelloAPIToken}`);
-        if (!trelloBoardResponse.ok) console.log(`HTTP error! status: ${trelloBoardResponse.status}`);
-        const boardData = await trelloBoardResponse.json();
-        return boardData;
+        const trelloBatchResponse = await fetch(`https://api.trello.com/1/batch?urls=/boards/${boardID},/boards/${boardID}/lists,/boards/${boardID}/cards/all&key=${trelloAPIKey}&token=${trelloAPIToken}`);
+        if (!trelloBatchResponse.ok) console.log(`HTTP error! status: ${trelloBatchResponse.status}`);
+        const boardsBatchData = await trelloBatchResponse.json();
+        return boardsBatchData;
     } catch (error) {
-        console.log(`Error fetching Board data: `, error);
-    }
-}
-
-const getTrelloBoardsLists = async (boardID) => {
-    try {
-        const trelloBoardsListResponse = await fetch(`https://api.trello.com/1/boards/${boardID}/lists?key=${trelloAPIKey}&token=${trelloAPIToken}`);
-        if (!trelloBoardsListResponse.ok) console.log(`HTTP error! status: ${trelloBoardsListResponse.status}`);
-        const boardsListsData = await trelloBoardsListResponse.json();
-        return boardsListsData;
-    } catch (error) {
-        console.log(`Error fetching Board Lists data: `, error);
-    }
-}
-
-const getTrelloCardsInBoard = async (boardID) => {
-    try {
-        const trelloCardsInBoardResponse = await fetch(`https://api.trello.com/1/boards/${boardID}/cards/all?key=${trelloAPIKey}&token=${trelloAPIToken}`);
-        if (!trelloCardsInBoardResponse.ok) console.log(`HTTP error! status: ${trelloCardsInBoardResponse.status}`);
-        const boardCardsData = await trelloCardsInBoardResponse.json();
-        return boardCardsData;
-    } catch (error) {
-        console.log(`Error fetching Board Cards data: `, error);
+        console.log(`Error getting batch trello data`, error);
     }
 }
 
 const setCardsData = (cards) => {
     if (cards.length > 0) {
         cardsContainer.innerHTML = ``;
+        cardsNum.innerHTML = `(${cards.length})`;
         cards.forEach((card, cardIndex) => {
             let status;
             let cardsIndex = cardIndex + 1;
@@ -100,15 +80,10 @@ const setCardsData = (cards) => {
 }
 
 const getBoard = async (boardID) => {
-    let trelloBoard = await getTrelloBoard(boardID);
-    let trelloLists = await getTrelloBoardsLists(boardID);
-    let trelloCards = await getTrelloCardsInBoard(boardID);
-
-    // let boardData = {
-    //     trelloBoard,
-    //     trelloLists,
-    //     trelloCards
-    // }
+    let batchBoardData = await getTrelloBatchAPI(boardID);
+    let trelloBoard = batchBoardData[0][200];
+    let trelloLists = batchBoardData[1][200];
+    let trelloCards = batchBoardData[2][200];
 
     let board = {
         id: trelloBoard?.id,
@@ -152,41 +127,12 @@ const getBoard = async (boardID) => {
     }
 
     if (cards.length > 0) setCardsData(cards);
-
-    console.log(`Board`, board);
 }
 
 getBoard(testBoardID);
-
-const createWebhook = async () => {
-    try {
-        const response = await fetch(`https://api.trello.com/1/webhooks/`, {
-            method: `POST`,
-            headers: {
-                'Content-Type': `application/json`
-            },
-            body: JSON.stringify({
-                key: trelloAPIKey,
-                idModel: testBoardID,
-                token: trelloAPIToken,
-                callbackURL: `https://smasherscape.vercel.app/api/webhook/`,
-                description: `My Trello Webhook For Test Board`
-            })
-        });
-    
-        const latestBoardData = await response.json();
-        console.log(`Latest Board Data`, latestBoardData);
-        return latestBoardData;
-    } catch (error) {
-        if (error.response) {
-            console.log(`Response data`, await error.response.text());
-        } else {
-            console.log(`Error fetching Board Cards data: `, error);
-        }
-    }
-};
-
-// createWebhook();
+setInterval(() => {
+    getBoard(testBoardID);
+}, 25 * 1000);
 
 trelloForm.addEventListener(`submit`, (trelloFormSubmitEvent) => {
     trelloFormSubmitEvent.preventDefault();
