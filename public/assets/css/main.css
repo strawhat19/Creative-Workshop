@@ -17,7 +17,8 @@
   --borderRadius: 8px;
   --fontColor: white;
   --containerWidth: 90%;
-  --accentColor: teal;
+  --mainColor: #00c2ff;
+  --accentColor: #00cc80;
   --background: #314a89;
   --fontFamily: "Montserrat";
   --transition: 0.24s cubic-bezier(0.77, 0.2, 0.05, 1);
@@ -68,7 +69,7 @@ form input {
 
 footer {
   font-size: 12px;
-  padding-top: 35px;
+  padding: 35px 0;
 }
 
 .m0 {
@@ -240,6 +241,14 @@ footer {
   color: var(--accentColor);
 }
 
+.mainColor {
+  color: var(--mainColor);
+}
+
+.accentColor {
+  color: var(--accentColor);
+}
+
 .borderRadius {
   border-radius: var(--borderRadius);
 }
@@ -297,15 +306,36 @@ footer {
   justify-content: space-between;
 }
 
+@media (max-width: 935px) {
+  .trelloTicketForm {
+    flex-direction: column;
+  }
+  .trelloTicketForm input, .trelloTicketForm button {
+    width: 100%;
+  }
+}
+
 .card {
   padding: 15px;
-  min-width: 49%;
-  max-width: 49%;
+  min-width: 30%;
+  max-width: 30%;
   border: solid 1px white;
   border-radius: var(--borderRadius);
 }
 .card .cardContent {
   font-size: 12px;
+}
+@media (max-width: 1366px) {
+  .card {
+    min-width: 47%;
+    max-width: 47%;
+  }
+}
+@media (max-width: 600px) {
+  .card {
+    min-width: 100%;
+    max-width: 100%;
+  }
 }
 
 .status.todo {

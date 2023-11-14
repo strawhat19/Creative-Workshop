@@ -25,6 +25,7 @@ const lastUpdated = document.querySelector(`.lastUpdated`);
 const nextUpdateIn = document.querySelector(`.nextUpdateIn`);
 const trelloForm = document.querySelector(`.trelloTicketForm`);
 const cardsContainer = document.querySelector(`.cardsContainer`);
+const refreshBoardButton = document.querySelector(`.refreshBoardButton`);
 const trelloTicketTitleField = document.querySelector(`.trelloTicketTitleField`);
 const trelloTicketAttachmentField = document.querySelector(`.trelloTicketAttachmentField`);
 const trelloAPISecret = `ab406d5ee169689f283c6c45594de45a4d3091f6f13e2d6f6098adf325c1a9e9`;
@@ -49,7 +50,7 @@ const deleteTrelloCard = async (cardID) => {
         });
         if (!deleteTrelloCardResponse.ok) console.log(`HTTP error! status: ${deleteTrelloCardResponse.status}`);
         const deletedTrelloCardData = await deleteTrelloCardResponse.json();
-        getBoard(testBoardID);
+        refreshBoard(testBoardID);
         return deletedTrelloCardData;
     } catch (error) {
         console.log(`Error getting batch trello data`, error);
@@ -88,7 +89,7 @@ const setCardCover = async (cardID, attachmentID) => {
         if (!response.ok) {
             console.log(`HTTP error! status: ${response.status}`);
         } else {
-            getBoard(testBoardID);
+            refreshBoard(testBoardID);
         }
     } catch (error) {
         console.log(`Error setting card cover`, error);
@@ -110,7 +111,7 @@ const createTrelloCard = async (name, description, attachmentURL, listID) => {
             const attachmentID = await addAttachmentToCard(createdTrelloCard.id, attachmentURL);
             if (attachmentID) await setCardCover(createdTrelloCard.id, attachmentID);
         } else {
-            getBoard(testBoardID);
+            refreshBoard(testBoardID);
         };
         return createdTrelloCard;
     } catch (error) {
@@ -189,7 +190,7 @@ const setCardsData = (cards) => {
     }
 }
 
-const getBoard = async (boardID) => {
+const refreshBoard = async (boardID) => {
     let batchBoardData = await getTrelloBatchAPI(boardID);
     let trelloBoard = batchBoardData[0][200];
     let trelloLists = batchBoardData[1][200];
@@ -243,14 +244,18 @@ const getBoard = async (boardID) => {
     if (cards.length > 0) setCardsData(cards);
 }
 
-getBoard(testBoardID);
+refreshBoard(testBoardID);
 setInterval(() => {
     if (parseInt(nextUpdateIn.innerHTML) <= 0) {
-        getBoard(testBoardID);
+        refreshBoard(testBoardID);
     } else {
         nextUpdateIn.innerHTML = parseInt(nextUpdateIn.innerHTML) - 1;
     }
 }, 1000);
+
+refreshBoardButton.addEventListener(`click`, (refreshBoardButtonClickEvent) => {
+    refreshBoard(testBoardID);
+})
 
 trelloForm.addEventListener(`submit`, (trelloFormSubmitEvent) => {
     trelloFormSubmitEvent.preventDefault();
