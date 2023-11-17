@@ -19,6 +19,8 @@ let fullDateTimeFormat = `${timeFormat}, ${dayFormat}, ${dateFormat}`;
 let deleteCardButtons = document.querySelectorAll(`.cardDeleteButton`);
 
 const testBoardID = `CoKhGhy5`;
+const creativeWorkshopBoardID = `vHDa20Za`;
+const boardToShowID = creativeWorkshopBoardID;
 const cardsNum = document.querySelector(`.cardsNum`);
 const trelloAPIKey = `9c38cf9f33ed47f5b4023cf0abaa7bb0`;
 const lastUpdated = document.querySelector(`.lastUpdated`);
@@ -31,6 +33,8 @@ const trelloTicketAttachmentField = document.querySelector(`.trelloTicketAttachm
 const trelloAPISecret = `ab406d5ee169689f283c6c45594de45a4d3091f6f13e2d6f6098adf325c1a9e9`;
 const trelloTicketDescriptionField = document.querySelector(`.trelloTicketDescriptionField`);
 const trelloAPIToken = `ATTA66b1ce6ba14d4eceb263827501181da8062d575eafa5510d055c2c246f56eede75D5CE72`;
+
+const getPercentage = (percent, number) => (percent / 100) * number;
 
 const getTrelloBatchAPI = async (boardID) => {
     try {
@@ -50,7 +54,7 @@ const deleteTrelloCard = async (cardID) => {
         });
         if (!deleteTrelloCardResponse.ok) console.log(`HTTP error! status: ${deleteTrelloCardResponse.status}`);
         const deletedTrelloCardData = await deleteTrelloCardResponse.json();
-        refreshBoard(testBoardID);
+        refreshBoard(boardToShowID);
         return deletedTrelloCardData;
     } catch (error) {
         console.log(`Error getting batch trello data`, error);
@@ -89,7 +93,7 @@ const setCardCover = async (cardID, attachmentID) => {
         if (!response.ok) {
             console.log(`HTTP error! status: ${response.status}`);
         } else {
-            refreshBoard(testBoardID);
+            refreshBoard(boardToShowID);
         }
     } catch (error) {
         console.log(`Error setting card cover`, error);
@@ -111,7 +115,7 @@ const createTrelloCard = async (name, description, attachmentURL, listID) => {
             const attachmentID = await addAttachmentToCard(createdTrelloCard.id, attachmentURL);
             if (attachmentID) await setCardCover(createdTrelloCard.id, attachmentID);
         } else {
-            refreshBoard(testBoardID);
+            refreshBoard(boardToShowID);
         };
         return createdTrelloCard;
     } catch (error) {
@@ -119,7 +123,8 @@ const createTrelloCard = async (name, description, attachmentURL, listID) => {
     }
 }
 
-const setCardsData = (cards) => {
+const setBoardsData = (board) => {
+    let { lists, cards } = board;
     if (cards.length > 0) {
         cardsContainer.innerHTML = ``;
         cardsNum.innerHTML = `(${cards.length})`;
@@ -137,9 +142,11 @@ const setCardsData = (cards) => {
             let cardRight = document.createElement(`div`);
             let cardDeleteButton = document.createElement(`button`);
 
-            if (statusLevel <= 1) {
+            let firstStatusTier = getPercentage(25, lists.length);
+            let secondStatusTier = getPercentage(50, lists.length);
+            if (statusLevel <= firstStatusTier) {
                 status = `todo`;
-            } else if (statusLevel > 1 && statusLevel < 3) {
+            } else if (statusLevel > firstStatusTier && statusLevel < secondStatusTier) {
                 status = `inProgress`;
             } else {
                 status = `done`;
@@ -149,11 +156,11 @@ const setCardsData = (cards) => {
             cardElement.id = `card-${cardsIndex}-${card?.id}`;
 
             cardTitle.classList.add(`cardTitle`, `flex`, `spaceBetween`);
-            cardLeft.classList.add(`cardLeft`);
-            cardRight.classList.add(`cardRight`, `flex`, `gap10`, `alignCenter`);
+            cardLeft.classList.add(`cardLeft`, `textOverflow`);
+            cardRight.classList.add(`cardRight`, `flex`, `gap10`, `alignCenter`, `justifyEnd`);
 
             cardLeft.innerHTML = `${cardsIndex}) ${card?.name}`;
-            cardStatus.classList.add(`status`, status, `ttc`, `p15x`, `h100`, `flex`, `alignCenter`, `borderRadius`);
+            cardStatus.classList.add(`status`, status, `ttc`, `p15x`, `h100`, `flex`, `alignCenter`, `borderRadius`, `textOverflow`);
             cardStatus.innerHTML = card?.status;
 
             cardContent.classList.add(`cardContent`, `p15nb`);
@@ -187,6 +194,8 @@ const setCardsData = (cards) => {
 
             cardsContainer.append(cardElement);
         })
+    } else {
+        cardsContainer.innerHTML = `No Card(s) Yet...`;
     }
 }
 
@@ -208,7 +217,7 @@ const refreshBoard = async (boardID) => {
         return {
             id: lst?.id,
             name: lst?.name,
-            position: lst?.pos,
+            position: lstIndex + 1,
         }
     })
 
@@ -241,20 +250,20 @@ const refreshBoard = async (boardID) => {
     lastUpdated.innerHTML = dayjs().tz(defaultTimezone).format(timeFormat);
     console.log(`Updated Board`, board);
 
-    if (cards.length > 0) setCardsData(cards);
+    setBoardsData(board);
 }
 
-refreshBoard(testBoardID);
+refreshBoard(boardToShowID);
 setInterval(() => {
     if (parseInt(nextUpdateIn.innerHTML) <= 0) {
-        refreshBoard(testBoardID);
+        refreshBoard(boardToShowID);
     } else {
         nextUpdateIn.innerHTML = parseInt(nextUpdateIn.innerHTML) - 1;
     }
 }, 1000);
 
 refreshBoardButton.addEventListener(`click`, (refreshBoardButtonClickEvent) => {
-    refreshBoard(testBoardID);
+    refreshBoard(boardToShowID);
 })
 
 trelloForm.addEventListener(`submit`, (trelloFormSubmitEvent) => {

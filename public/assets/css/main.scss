@@ -37,7 +37,12 @@ body {
 
 header { padding-top: 35px; }
 
-img { max-width: 100%; }
+img { 
+    max-width: 100%;
+    &.cardCoverImage {
+        max-height: 350px;
+    }
+}
 
 button {
     border: none;
@@ -132,6 +137,7 @@ footer {
     &.columns { flex-direction: column; }
     &.alignCenter { align-items: center; }
     &.alignCenter { align-items: center; }
+    &.justifyEnd { justify-content: flex-end; }
     &.justifyCenter { justify-content: center; }
     &.spaceBetween { justify-content: space-between; }
 }
@@ -165,6 +171,10 @@ footer {
 }
 
 .status {
+    &.textOverflow {
+        line-height: 1.5;
+        max-width: 180px;
+    }
     &.todo {
         color: var(--toDoSolid);
         background: var(--toDoBG);
@@ -183,4 +193,43 @@ footer {
     max-width: fit-content;
     font-weight: 300;
     font-size: 14px;
+}
+
+.textOverflow {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 60%;
+    display: block;
+    margin: 0;
+    &.tnoflow {
+        overflow: visible;
+    }
+    &.tflow100 {
+      max-width: 100%;
+    }
+    &.tflow95 {
+      max-width: 95%;
+    }
+    &.tflow65 {
+      max-width: 65%;
+    }
+    &.tflow35 {
+      max-width: 35%;
+    }
+    &.tFlowBlock {
+      display: block;
+      max-width: 139px;
+    }
+    &.tflowShowDots {
+      overflow: visible;
+      position: relative;
+      &::after {
+        content: "...";
+        position: absolute;
+        bottom: 10px;
+        right: -20px;
+        overflow: visible;
+      }
+    }
 }
