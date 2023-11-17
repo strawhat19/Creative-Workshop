@@ -6,6 +6,7 @@
 }
 
 :root {
+  --trelloGray: #9fadbc;
   --backLogBG: #e2e2f8;
   --backLogSolid: #6e6edb;
   --toDoBG: #f6d9ed;
@@ -208,6 +209,14 @@ footer {
   text-align: left;
 }
 
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
 .p5nt {
   padding: 0 5px 5px 5px;
 }
@@ -322,9 +331,9 @@ footer {
 }
 
 .card {
-  padding: 15px;
   min-width: 30%;
   max-width: 30%;
+  padding: 15px 15px 50px;
   border: solid 1px white;
   border-radius: var(--borderRadius);
 }
@@ -337,11 +346,15 @@ footer {
     max-width: 47%;
   }
 }
-@media (max-width: 600px) {
+@media (max-width: 787px) {
   .card {
     min-width: 100%;
     max-width: 100%;
   }
+}
+
+.cardFooter {
+  padding: 15px 25px 15px 0;
 }
 
 .status.textOverflow {
@@ -359,6 +372,11 @@ footer {
 .status.done {
   color: var(--doneSolid);
   background: var(--doneBG);
+}
+
+.label {
+  color: black;
+  background: white;
 }
 
 .timeUpdates {
