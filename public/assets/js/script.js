@@ -294,14 +294,16 @@ refreshBoardButton.addEventListener(`click`, (refreshBoardButtonClickEvent) => {
     refreshBoard(boardToShowID);
 })
 
-trelloForm.addEventListener(`submit`, (trelloFormSubmitEvent) => {
-    trelloFormSubmitEvent.preventDefault();
-    let ticketTitle = trelloTicketTitleField?.value;
-    let ticketDescription = trelloTicketDescriptionField?.value;
-    let ticketAttachment = trelloTicketAttachmentField?.value;
-    createTrelloCard(ticketTitle, ticketDescription, ticketAttachment, board?.lists[0]?.id);
-    trelloForm.reset();
-});
+if (trelloForm) {
+    trelloForm.addEventListener(`submit`, (trelloFormSubmitEvent) => {
+        trelloFormSubmitEvent.preventDefault();
+        let ticketTitle = trelloTicketTitleField?.value;
+        let ticketDescription = trelloTicketDescriptionField?.value;
+        let ticketAttachment = trelloTicketAttachmentField?.value;
+        createTrelloCard(ticketTitle, ticketDescription, ticketAttachment, board?.lists[0]?.id);
+        trelloForm.reset();
+    });
+}
 
 const copyrightYear = document.querySelector(`.year`);
 const copyrightYearValue = new Date().getFullYear();

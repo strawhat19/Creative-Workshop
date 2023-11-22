@@ -22,6 +22,12 @@
   --accentColor: #00cc80;
   --background: #314a89;
   --fontFamily: "Montserrat";
+  --softWhite: #dcdad7;
+  --navyBlue: #3e6595;
+  --darkGray: #1f1f1f;
+  --mediumGray: #3c3c3c;
+  --selectionTextColor: var(--softWhite);
+  --selectionBackgroundColor: var(--navyBlue);
   --transition: 0.24s cubic-bezier(0.77, 0.2, 0.05, 1);
   --backgroundRepeatingLinearGradient: repeating-linear-gradient(rgb(0, 0, 0) 0px, rgb(0, 0, 0) 24px, var(--accentColor) 25px);
   --backgroundGradient: linear-gradient(135deg, transparent 0%, transparent 17%,rgb(87 146 234 / 32%) 17%, rgba(87, 146, 234,0.6) 59%,transparent 59%, transparent 64%,rgba(34, 81, 222,0.6) 64%, rgba(34, 81, 222,0.6) 100%),linear-gradient(45deg, transparent 0%, transparent 2%,rgb(87, 146, 234) 2%, rgb(87, 146, 234) 46%,rgb(114, 178, 239) 46%, rgb(114 178 239 / 52%) 54%,transparent 54%, transparent 63%,rgb(7 48 216 / 36%) 63%, rgb(7 48 216 / 32%) 100%),linear-gradient(90deg, rgb(255,255,255),rgb(255,255,255));
@@ -76,8 +82,40 @@ footer {
   padding: 35px 0;
 }
 
+::-moz-selection {
+  color: var(--selectionTextColor);
+  background: var(--selectionBackgroundColor);
+}
+
+::selection {
+  color: var(--selectionTextColor);
+  background: var(--selectionBackgroundColor);
+}
+
+::-webkit-scrollbar {
+  background: var(--darkGray);
+  -webkit-transition: var(--transition);
+  transition: var(--transition);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--mediumGray);
+  -webkit-transition: var(--transition);
+  transition: var(--transition);
+  border-radius: var(--borderRadius);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--navyBlue);
+  -webkit-transition: var(--transition);
+  transition: var(--transition);
+}
+
 .m0 {
   margin: 0;
+}
+
+.w70 {
+  width: 70%;
 }
 
 .w85 {
@@ -94,6 +132,14 @@ footer {
 
 .w100 {
   width: 100%;
+}
+
+.m25 {
+  margin: 25px;
+}
+
+.m35 {
+  margin: 35px;
 }
 
 .h100 {
@@ -140,8 +186,24 @@ footer {
   padding: 5px 0 0;
 }
 
+.m25t {
+  margin-top: 25px;
+}
+
+.m35t {
+  margin-top: 35px;
+}
+
 .m0auto {
   margin: 0 auto;
+}
+
+.m10l {
+  margin-left: 10px;
+}
+
+.m10r {
+  margin-right: 10px;
 }
 
 .mw225 {
@@ -259,6 +321,11 @@ footer {
 
 .accentColor {
   color: var(--accentColor);
+}
+
+.mauto {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .borderRadius {
