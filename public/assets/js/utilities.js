@@ -88,3 +88,24 @@ const isValid = (item) => {
     }
   }
 }
+
+// const creativeWorkshopOrderTypeFormID = `eoAJiOwq`;
+// const creativeWorkshopOrderTypeFormToken = `tfp_DoXWJw6CyKQSeBhQUvpZJ2WTLhzLaYJFXxpVyvjeZgVF_e4s9Btb98fZ6`;
+
+// const getTypeformResponses = async (formID) => {
+//   try {
+//       const getTypeformResponsesRes = await fetch(`https://api.typeform.com/forms/${formID}/responses?page_size=1000`, {
+//           headers: {
+//               Authorization: `Bearer ${creativeWorkshopOrderTypeFormToken}`
+//           }
+//       });
+//       if (!getTypeformResponsesRes.ok) console.log(`Error Getting Typeform Responses`, getTypeformResponsesRes.status);
+//       const typeFormResponsesData = await getTypeformResponsesRes.json();
+//       return typeFormResponsesData;
+//   } catch (error) {
+//       console.log(`Error Getting Typeform Responses`, error);
+//   }
+// }
+
+// let creativeWorkshopOrderTypeFormResponses = await getTypeformResponses(creativeWorkshopOrderTypeFormID);
+// console.log(`Creative Workshop Order TypeForm Responses`, creativeWorkshopOrderTypeFormResponses);

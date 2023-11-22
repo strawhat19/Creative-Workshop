@@ -1,26 +1,18 @@
 let board;
-dayjs.extend(window.dayjs_plugin_utc);
-dayjs.extend(window.dayjs_plugin_timezone);
-
-let timezones = {
-    america_US_NewYork: `America/New_York`,
-    asia_Taiwan_Taipei: `Asia/Taipei`,
-    asia_Japan_Tokyo: `Asia/Tokyo`,
-}
-
-let browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-let defaultTimezone = browserTimezone || timezones.america_US_NewYork;
-
 let dayFormat = `dddd`;
 let timeFormat = `h:mm:ss A`;
 let dateFormat = `MM/DD/YYYY`;
+dayjs.extend(window.dayjs_plugin_utc);
+dayjs.extend(window.dayjs_plugin_timezone);
+let browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+let defaultTimezone = browserTimezone || `America/New_York`;
 let fullDateTimeFormat = `${timeFormat}, ${dayFormat}, ${dateFormat}`;
-
 let deleteCardButtons = document.querySelectorAll(`.cardDeleteButton`);
 
 const testBoardID = `CoKhGhy5`;
 const creativeWorkshopBoardID = `vHDa20Za`;
 const boardToShowID = creativeWorkshopBoardID;
+const creativeWorkshopOrderTypeFormID = `eoAJiOwq`;
 const cardsNum = document.querySelector(`.cardsNum`);
 const trelloAPIKey = `9c38cf9f33ed47f5b4023cf0abaa7bb0`;
 const lastUpdated = document.querySelector(`.lastUpdated`);
@@ -33,6 +25,7 @@ const trelloTicketAttachmentField = document.querySelector(`.trelloTicketAttachm
 const trelloAPISecret = `ab406d5ee169689f283c6c45594de45a4d3091f6f13e2d6f6098adf325c1a9e9`;
 const trelloTicketDescriptionField = document.querySelector(`.trelloTicketDescriptionField`);
 const trelloAPIToken = `ATTA66b1ce6ba14d4eceb263827501181da8062d575eafa5510d055c2c246f56eede75D5CE72`;
+const creativeWorkshopOrderTypeFormToken = `tfp_DoXWJw6CyKQSeBhQUvpZJ2WTLhzLaYJFXxpVyvjeZgVF_e4s9Btb98fZ6`;
 const paperclipIcon = `<svg title="Attachments" width="24" height="24" role="presentation" focusable="false" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M11.6426 17.9647C10.1123 19.46 7.62736 19.4606 6.10092 17.9691C4.57505 16.478 4.57769 14.0467 6.10253 12.5566L13.2505 5.57184C14.1476 4.6952 15.5861 4.69251 16.4832 5.56921C17.3763 6.44184 17.3778 7.85135 16.4869 8.72199L9.78361 15.2722C9.53288 15.5172 9.12807 15.5163 8.86954 15.2636C8.61073 15.0107 8.60963 14.6158 8.86954 14.3618L15.0989 8.27463C15.4812 7.90109 15.4812 7.29546 15.0989 6.92192C14.7167 6.54838 14.0969 6.54838 13.7146 6.92192L7.48523 13.0091C6.45911 14.0118 6.46356 15.618 7.48523 16.6163C8.50674 17.6145 10.1511 17.6186 11.1679 16.6249L17.8712 10.0747C19.5274 8.45632 19.5244 5.83555 17.8676 4.2165C16.2047 2.59156 13.5266 2.59657 11.8662 4.21913L4.71822 11.2039C2.42951 13.4404 2.42555 17.083 4.71661 19.3218C7.00774 21.5606 10.7323 21.5597 13.0269 19.3174L19.7133 12.7837C20.0956 12.4101 20.0956 11.8045 19.7133 11.431C19.331 11.0574 18.7113 11.0574 18.329 11.431L11.6426 17.9647Z" fill="#9fadbc"></path></svg>`;
 const commentsIcon = `<svg title="Comments" width="24" height="24" role="presentation" focusable="false" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 17H12.5L8.28037 20.4014C6.97772 21.4869 5 20.5606 5 18.865V16.1973C3.2066 15.1599 2 13.2208 2 11C2 7.68629 4.68629 5 8 5H16C19.3137 5 22 7.68629 22 11C22 14.3137 19.3137 17 16 17ZM16 7H8C5.79086 7 4 8.79086 4 11C4 12.8638 5.27477 14.4299 7 14.874V19L12 15H16C18.2091 15 20 13.2091 20 11C20 8.79086 18.2091 7 16 7Z" fill="#9fadbc"></path></svg>`;
 
@@ -40,7 +33,11 @@ const getPercentage = (percent, number) => (percent / 100) * number;
 
 const getTypeformResponses = async (formID) => {
     try {
-        const getTypeformResponsesRes = await fetch(`https://api.typeform.com/forms/${formID}/responses`);
+        const getTypeformResponsesRes = await fetch(`https://api.typeform.com/forms/${formID}/responses?page_size=1000`, {
+            headers: {
+                Authorization: `Bearer ${creativeWorkshopOrderTypeFormToken}`
+            }
+        });
         if (!getTypeformResponsesRes.ok) console.log(`Error Getting Typeform Responses`, getTypeformResponsesRes.status);
         const typeFormResponsesData = await getTypeformResponsesRes.json();
         return typeFormResponsesData;
@@ -143,7 +140,7 @@ const setBoardsData = (board) => {
         cardsNum.innerHTML = `(${cards.length})`;
         cards.forEach((card, cardIndex) => {
             let status;
-            let cardsIndex = cardIndex + 1;
+            let orderIndex = cardIndex + 1;
             let statusLevel = card?.statusLevel;
             let cardCover = document.createElement(`div`);
             let cardCoverImage = document.createElement(`img`);
@@ -169,23 +166,25 @@ const setBoardsData = (board) => {
                 status = `done`;
             }
 
+            let orderTitleAndStatus = `${card?.name} - ${card?.status}`;
             cardElement.classList.add(`card`, `cardElement`, `relative`);
-            cardElement.id = `card-${cardsIndex}-${card?.id}`;
+            cardElement.id = `card-${orderIndex}-${card?.id}`;
 
             cardTitle.classList.add(`cardTitle`, `flex`, `spaceBetween`, `gap5`);
-            cardTitle.title = `${card?.name} - ${card?.status}`
+            cardTitle.title = orderTitleAndStatus;
             cardLeft.classList.add(`cardLeft`, `textOverflow`);
             cardRight.classList.add(`cardRight`, `flex`, `gap10`, `alignCenter`, `justifyEnd`);
 
-            cardLeft.innerHTML = `${cardsIndex}) ${card?.name}`;
+            cardLeft.innerHTML = `${orderIndex}) ${card?.name}`;
             cardStatus.classList.add(`status`, status, `ttc`, `p15x`, `h100`, `flex`, `alignCenter`, `borderRadius`, `textOverflow`);
             cardStatus.innerHTML = card?.status;
 
             cardContent.classList.add(`cardContent`, `p15nb`);
             cardContent.innerHTML = card?.description?.replace(/\n/g, `<br>`);
             
-            cardDeleteButton.id = `delete-card-${cardsIndex}-${card?.id}`;
+            cardDeleteButton.id = `delete-card-${orderIndex}-${card?.id}`;
             cardDeleteButton.classList.add(`cardDeleteButton`, `invertOnHover`, `p5`);
+            cardDeleteButton.title = `Delete Order #${orderIndex} ${orderTitleAndStatus}`;
             cardDeleteButton.innerHTML = `<i class="fas fa-trash-alt"></i>`;
             cardDeleteButton.addEventListener(`click`, deleteButtonClickEvent => {
                 let cardToDeleteID = cardDeleteButton?.id?.split(`-`).pop();
@@ -216,6 +215,7 @@ const setBoardsData = (board) => {
             }
 
             footerRight.classList.add(`footerRight`, `flex`, `gap5`, `alignCenter`, `justifyCenter`);
+            footerRight.title = `${card?.attachments > 0 ? `Attachments: ${card?.attachments}` : ``}${card?.comments > 0 ? `Comments: ${card?.comments}` : ``}`;
             footerRight.innerHTML = `${card?.attachments > 0 ? `${paperclipIcon} ${card?.attachments}` : ``}${card?.comments > 0 ? `${commentsIcon} ${card?.comments}` : ``}`;
 
             cardFooter.append(footerLeft);
@@ -246,6 +246,8 @@ const refreshBoard = async (boardID) => {
         description: trelloBoard?.desc,
         organization: trelloBoard?.idOrganization,
     }
+
+    // console.log(`Raw Orders From Database`, trelloCards);
 
     let lists = trelloLists.map((lst, lstIndex) => {
         return {
@@ -315,7 +317,11 @@ if (trelloForm) {
         createTrelloCard(ticketTitle, ticketDescription, ticketAttachment, board?.lists[0]?.id);
         trelloForm.reset();
     });
-}
+} 
+// else {
+//     let creativeWorkshopOrderTypeFormResponses = await getTypeformResponses(creativeWorkshopOrderTypeFormID);
+//     console.log(`Creative Workshop Order TypeForm Responses`, creativeWorkshopOrderTypeFormResponses);
+// }
 
 const copyrightYear = document.querySelector(`.year`);
 const copyrightYearValue = new Date().getFullYear();
