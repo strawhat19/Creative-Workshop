@@ -18,19 +18,20 @@
 <body id="creativeWorkshop" class="creativeWorkshop">
 
     <header class="header">
-        <div class="container flex alignCenter gap5">
-            <img width="50" src="./public/assets/images/Blue-Green-Icon.svg" alt="Blue Green Icon" />
-            <h1>Creative Workshop</h1>
+        <div class="creativeWorkshopLogoContainer maxfit container containerL mrauto flex alignCenter gap5 p15">
+            <img width="250" src="./public/assets/images/creativeWorkshopLogo.png" alt="Creative Workshop Logo" />
+            <!-- <img width="50" src="./public/assets/images/Blue-Green-Icon.svg" alt="Blue Green Icon" /> -->
+            <h1 class="visuallyHidden screenReaderText">Creative Workshop</h1>
         </div>
     </header>
 
-    <main class="container">
+    <main class="container mauto">
 
         <section class="ordersSection trelloCardsSections">
             <div class="ordersSectionTitle flex alignCenter spaceBetween p15b">
-                <h2 class="p5b flex gap5 alignCenter">
+                <h2 class="flex gap5 alignCenter h100 p10t">
                     Orders 
-                    <span class="cardsNum"></span>
+                    <span class="ordersNum cardsNum"></span>
                     <div class="newOrderFormButtonContainer m10l">
                         <div data-tf-live="01HFTCNV5MQH4HZEMNXN0P9HFF"></div><script src="//embed.typeform.com/next/embed.js"></script>
                     </div>
@@ -49,7 +50,7 @@
     </main>
 
     <footer class="footer">
-        <div class="copyright flex gap5 alignCenter spaceBetween container">
+        <div class="copyright flex gap5 alignCenter spaceBetween container mauto">
             Trello API
             <span class="copyrightField">
                 Copyright © <span class="year">

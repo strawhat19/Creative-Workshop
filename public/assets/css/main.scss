@@ -112,9 +112,12 @@ footer {
 .m25 { margin: 25px; }
 .m35 { margin: 35px; }
 .h100 { height: 100%; }
-.p35 { padding: 35px; }
 .p10 { padding: 10px; }
 .p15 { padding: 15px; }
+.p20 { padding: 20px; }
+.p25 { padding: 25px; }
+.p30 { padding: 30px; }
+.p35 { padding: 35px; }
 .p5x { padding: 0 5px; }
 .p5y { padding: 5px 0; }
 .p10y { padding: 10px 0; }
@@ -134,6 +137,7 @@ footer {
 .p25b { padding: 0 0 25px; }
 .p30b { padding: 0 0 30px; }
 .p35b { padding: 0 0 35px; }
+.p10t { padding: 10px 0 0; }
 .p15t { padding: 15px 0 0; }
 .p20t { padding: 20px 0 0; }
 .p25t { padding: 25px 0 0; }
@@ -141,6 +145,7 @@ footer {
 .p35t { padding: 35px 0 0; }
 .p5y15x { padding: 5px 15px; }
 .p5y20x { padding: 5px 20px; }
+.mrauto { margin-right: auto; }
 .fit { min-width: fit-content; }
 .text-left { text-align: left; }
 .relative { position: relative; }
@@ -148,6 +153,7 @@ footer {
 .p5nt { padding: 0 5px 5px 5px; }
 .p5nb { padding: 5px 5px 0 5px; }
 .text-right { text-align: right; }
+.maxfit { max-width: fit-content; }
 .ttu { text-transform: uppercase; }
 .ttl { text-transform: lowercase; }
 .ttc { text-transform: capitalize; }
@@ -156,9 +162,11 @@ footer {
 .accent { color: var(--accentColor); }
 .mainColor { color: var(--mainColor); }
 .accentColor { color: var(--accentColor); }
+.container { width: var(--containerWidth); }
 .mauto { margin-left: auto; margin-right: auto; }
 .borderRadius { border-radius: var(--borderRadius); }
-.container { width: var(--containerWidth); margin: 0 auto; }
+.containerL { margin-left: calc(95% - var(--containerWidth)); }
+.containerR { margin-right: calc(95% - var(--containerWidth)); }
 .cardBorder { border: 5px solid var(--accentColor); border-radius: var(--borderRadius); }
 
 .flex {
@@ -177,6 +185,11 @@ footer {
     &.justifyEnd { justify-content: flex-end; }
     &.justifyCenter { justify-content: center; }
     &.spaceBetween { justify-content: space-between; }
+}
+
+.creativeWorkshopLogoContainer {
+    background: white;
+    border-radius: var(--borderRadius);
 }
 
 .trelloTicketForm {
@@ -278,4 +291,15 @@ footer {
         overflow: visible;
       }
     }
+}
+
+.visuallyHidden {
+    clip: rect(0, 0, 0, 0);
+    position: absolute;
+    overflow: hidden;
+    margin: -1px;
+    height: 1px;
+    width: 1px;
+    padding: 0;
+    border: 0;
 }
