@@ -38,14 +38,25 @@ const commentsIcon = `<svg title="Comments" width="24" height="24" role="present
 
 const getPercentage = (percent, number) => (percent / 100) * number;
 
+const getTypeformResponses = async (formID) => {
+    try {
+        const getTypeformResponsesRes = await fetch(`https://api.typeform.com/forms/${formID}/responses`);
+        if (!getTypeformResponsesRes.ok) console.log(`Error Getting Typeform Responses`, getTypeformResponsesRes.status);
+        const typeFormResponsesData = await getTypeformResponsesRes.json();
+        return typeFormResponsesData;
+    } catch (error) {
+        console.log(`Error Getting Typeform Responses`, error);
+    }
+}
+
 const getTrelloBatchAPI = async (boardID) => {
     try {
         const trelloBatchResponse = await fetch(`https://api.trello.com/1/batch?urls=/boards/${boardID},/boards/${boardID}/lists,/boards/${boardID}/cards/all&key=${trelloAPIKey}&token=${trelloAPIToken}`);
-        if (!trelloBatchResponse.ok) console.log(`HTTP error! status: ${trelloBatchResponse.status}`);
+        if (!trelloBatchResponse.ok) console.log(`Error Getting Batch Trello Data for Board`, trelloBatchResponse.status);
         const boardsBatchData = await trelloBatchResponse.json();
         return boardsBatchData;
     } catch (error) {
-        console.log(`Error getting batch trello data`, error);
+        console.log(`Error Getting Batch Trello Data for Board`, error);
     }
 }
 
@@ -54,51 +65,51 @@ const deleteTrelloCard = async (cardID) => {
         const deleteTrelloCardResponse = await fetch(`https://api.trello.com/1/cards/${cardID}?key=${trelloAPIKey}&token=${trelloAPIToken}`, {
             method: `DELETE`
         });
-        if (!deleteTrelloCardResponse.ok) console.log(`HTTP error! status: ${deleteTrelloCardResponse.status}`);
+        if (!deleteTrelloCardResponse.ok) console.log(`Error Deleting Trello Card`, deleteTrelloCardResponse.status);
         const deletedTrelloCardData = await deleteTrelloCardResponse.json();
         refreshBoard(boardToShowID);
         return deletedTrelloCardData;
     } catch (error) {
-        console.log(`Error getting batch trello data`, error);
+        console.log(`Error Deleting Trello Card`, error);
     }
 }
 
 const addAttachmentToCard = async (cardID, attachmentURL) => {
     try {
-        const attachURL = `https://api.trello.com/1/cards/${cardID}/attachments?key=${trelloAPIKey}&token=${trelloAPIToken}&url=${encodeURIComponent(attachmentURL)}`;
-        const response = await fetch(attachURL, {
+        const addAttachmentToCardURL = `https://api.trello.com/1/cards/${cardID}/attachments?key=${trelloAPIKey}&token=${trelloAPIToken}&url=${encodeURIComponent(attachmentURL)}`;
+        const addAttachmentToCardResponse = await fetch(addAttachmentToCardURL, {
             method: `POST`,
             headers: {
                 Accept: `application/json`
             },
         });
-        if (!response.ok) {
-            console.log(`HTTP error! status: ${response.status}`);
+        if (!addAttachmentToCardResponse.ok) {
+            console.log(`Error Adding Attachment to Trello Card`, addAttachmentToCardResponse.status);
             return;
         }
-        const attachmentData = await response.json();
+        const attachmentData = await addAttachmentToCardResponse.json();
         return attachmentData?.id;
     } catch (error) {
-        console.log(`Error adding attachment to Trello card`, error);
+        console.log(`Error Adding Attachment to Trello Card`, error);
     }
 }
 
 const setCardCover = async (cardID, attachmentID) => {
     try {
-        const coverUrl = `https://api.trello.com/1/cards/${cardID}?key=${trelloAPIKey}&token=${trelloAPIToken}&idAttachmentCover=${attachmentID}`;
-        const response = await fetch(coverUrl, {
+        const setCardCoverURL = `https://api.trello.com/1/cards/${cardID}?key=${trelloAPIKey}&token=${trelloAPIToken}&idAttachmentCover=${attachmentID}`;
+        const setCardCoverResponse = await fetch(setCardCoverURL, {
             method: `PUT`,
             headers: {
                 Accept: `application/json`
             },
         });
-        if (!response.ok) {
-            console.log(`HTTP error! status: ${response.status}`);
+        if (!setCardCoverResponse.ok) {
+            console.log(`Error Setting Card Cover`, setCardCoverResponse.status);
         } else {
             refreshBoard(boardToShowID);
         }
     } catch (error) {
-        console.log(`Error setting card cover`, error);
+        console.log(`Error Setting Card Cover`, error);
     }
 }
 
@@ -111,7 +122,7 @@ const createTrelloCard = async (name, description, attachmentURL, listID) => {
                 Accept: `application/json`
             },
         });
-        if (!createTrelloCardResponse.ok) console.log(`HTTP error! status: ${createTrelloCardResponse.status}`);
+        if (!createTrelloCardResponse.ok) console.log(`Create Trello Card Error`, createTrelloCardResponse.status);
         const createdTrelloCard = await createTrelloCardResponse.json();
         if (attachmentURL) {
             const attachmentID = await addAttachmentToCard(createdTrelloCard.id, attachmentURL);
@@ -121,7 +132,7 @@ const createTrelloCard = async (name, description, attachmentURL, listID) => {
         };
         return createdTrelloCard;
     } catch (error) {
-        console.log(`Error getting batch trello data`, error);
+        console.log(`Error Getting Batch Trello Data`, error);
     }
 }
 
@@ -269,6 +280,7 @@ const refreshBoard = async (boardID) => {
     });
 
     board = {
+        orders: cards,
         ...board,
         lists,
         cards,
@@ -276,7 +288,7 @@ const refreshBoard = async (boardID) => {
 
     nextUpdateIn.innerHTML = 25;
     lastUpdated.innerHTML = dayjs().tz(defaultTimezone).format(timeFormat);
-    console.log(`Updated Board`, board);
+    console.log(`Updated Creative Workshop Orders`, board);
 
     setBoardsData(board);
 }

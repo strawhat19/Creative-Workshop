@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trello API Testing</title>
+    <title>Creative Workshop Order(s) Dashboard</title>
     <link rel="stylesheet" href="./public/assets/css/main.css">
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.4/dayjs.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.4/plugin/utc.js" defer></script>
@@ -13,16 +14,20 @@
     <link rel="icon" href="./public/assets/images/Blue-Green-Icon.svg" type="image/x-icon">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous"/>
 </head>
-<body id="trelloAPITesting" class="trelloAPITesting">
+
+<body id="creativeWorkshop" class="creativeWorkshop">
+
     <header class="header">
         <div class="container flex alignCenter gap5">
             <img width="50" src="./public/assets/images/Blue-Green-Icon.svg" alt="Blue Green Icon" />
-            <h1>Trello API Testing</h1>
+            <h1>Creative Workshop</h1>
         </div>
     </header>
+
     <main class="container">
-        <section class="cardsSection">
-            <div class="cardsSectionTitle flex alignCenter spaceBetween p15b">
+
+        <section class="ordersSection trelloCardsSections">
+            <div class="ordersSectionTitle flex alignCenter spaceBetween p15b">
                 <h2 class="p5b flex gap5 alignCenter">
                     Orders 
                     <span class="cardsNum"></span>
@@ -40,7 +45,9 @@
                 <!-- Fill with JavaScript -->
             </div>
         </section>
+
     </main>
+
     <footer class="footer">
         <div class="copyright flex gap5 alignCenter spaceBetween container">
             Trello API
@@ -51,5 +58,6 @@
             </span>
         </div>
     </footer>
+
 </body>
 </html>
